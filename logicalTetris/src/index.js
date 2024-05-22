@@ -77,6 +77,7 @@ var Tetris = /** @class */ (function () {
                 _this.map[cube.y - 1][cube.x].g !== 0 ||
                 _this.map[cube.y - 1][cube.x].b !== 0) &&
                 _this.currentPiece.shape.indexOf({ x: cube.x, y: cube.y - 1 }) !== -1;
+            console.log(move);
             if (move) {
                 _this.currentPiece.shape.forEach(function (cube) {
                     _this.map[cube.y][cube.x] = { r: 0, g: 0, b: 0 };
