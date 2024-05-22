@@ -68,31 +68,6 @@ var Tetris = /** @class */ (function () {
         this.display.innerHTML = out;
     };
     Tetris.prototype.update = function () {
-        var _this = this;
-        //clear current piece
-        this.currentPiece.shape.forEach(function (cube) {
-            _this.map[cube.y][cube.x] = { r: 0, g: 0, b: 0 };
-        });
-        //move piece down
-        this.currentPiece.shape.forEach(function (cube) {
-            cube.y--;
-        });
-        //check for collision
-        var collision = false;
-        this.currentPiece.shape.forEach(function (cube) {
-            if (cube.y < 0 || _this.map[cube.y][cube.x].r + _this.map[cube.y][cube.x].g + _this.map[cube.y][cube.x].b > 0) {
-                collision = true;
-            }
-        });
-        //if collision, add piece and return
-        if (collision) {
-            this.addPiece();
-            return;
-        }
-        //update map with new piece
-        this.currentPiece.shape.forEach(function (cube) {
-            _this.map[cube.y][cube.x] = _this.currentPiece.color;
-        });
     };
     Tetris.prototype.start = function () {
         var _this = this;

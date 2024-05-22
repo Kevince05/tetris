@@ -78,34 +78,7 @@ class Tetris {
     }
 
     private update(): void {
-        //clear current piece
-        this.currentPiece.shape.forEach((cube) => {
-            this.map[cube.y][cube.x] = { r: 0, g: 0, b: 0 };
-        });
-
-        //move piece down
-        this.currentPiece.shape.forEach((cube) => {
-            cube.y--;
-        });
-
-        //check for collision
-        let collision = false;
-        this.currentPiece.shape.forEach((cube) => {
-            if (cube.y < 0 || this.map[cube.y][cube.x].r + this.map[cube.y][cube.x].g + this.map[cube.y][cube.x].b > 0) {
-                collision = true;
-            }
-        });
-
-        //if collision, add piece and return
-        if (collision) {
-            this.addPiece();
-            return;
-        }
-
-        //update map with new piece
-        this.currentPiece.shape.forEach((cube) => {
-            this.map[cube.y][cube.x] = this.currentPiece.color;
-        });
+        
     }
 
     public start(): void {
