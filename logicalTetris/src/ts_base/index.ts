@@ -85,7 +85,7 @@ class Tetris {
             //check if this something is the currentPiece himself
             move = (this.map[cube.y - 1][cube.x].r !== 0 ||
                 this.map[cube.y - 1][cube.x].g !== 0 ||
-                this.map[cube.y - 1][cube.x].b !== 0) &&;
+                this.map[cube.y - 1][cube.x].b !== 0);
             console.log(move);
             if (move) {
                 this.currentPiece.shape.forEach(cube => {
