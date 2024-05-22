@@ -78,7 +78,24 @@ class Tetris {
     }
 
     private update(): void {
-        
+
+        var move = true;
+        this.currentPiece.shape.forEach(cube => {
+            //check if there is something below
+            //check if this something is the currentPiece himself
+            move = (this.map[cube.y - 1][cube.x].r !== 0 ||
+                this.map[cube.y - 1][cube.x].g !== 0 ||
+                this.map[cube.y - 1][cube.x].b !== 0) &&
+                this.currentPiece.shape.indexOf({ x: cube.x, y: cube.y - 1 }) !== -1;
+
+            if (move) {
+                this.currentPiece.shape.forEach(cube => {
+                    this.map[cube.y][cube.x] = { r: 0, g: 0, b: 0 };
+                    cube.y--;
+                    this.map[cube.y][cube.x] = this.currentPiece.color;
+                });
+            }
+        });
     }
 
     public start(): void {

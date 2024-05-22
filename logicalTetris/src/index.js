@@ -68,6 +68,23 @@ var Tetris = /** @class */ (function () {
         this.display.innerHTML = out;
     };
     Tetris.prototype.update = function () {
+        var _this = this;
+        var move = true;
+        this.currentPiece.shape.forEach(function (cube) {
+            //check if there is something below
+            //check if this something is the currentPiece himself
+            move = (_this.map[cube.y - 1][cube.x].r !== 0 ||
+                _this.map[cube.y - 1][cube.x].g !== 0 ||
+                _this.map[cube.y - 1][cube.x].b !== 0) &&
+                _this.currentPiece.shape.indexOf({ x: cube.x, y: cube.y - 1 }) !== -1;
+            if (move) {
+                _this.currentPiece.shape.forEach(function (cube) {
+                    _this.map[cube.y][cube.x] = { r: 0, g: 0, b: 0 };
+                    cube.y--;
+                    _this.map[cube.y][cube.x] = _this.currentPiece.color;
+                });
+            }
+        });
     };
     Tetris.prototype.start = function () {
         var _this = this;
