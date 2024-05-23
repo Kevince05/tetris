@@ -1,5 +1,5 @@
-import * as BABYLON from 'babylonjs';
-import {Tetris} from './logicalTetris';
+import * as BABYLON from "@babylonjs/core";
+import {Tetris} from "./logicalTetris";
 
 function createScene(canvas : HTMLCanvasElement): BABYLON.Scene {
     const engine = new BABYLON.Engine(canvas, true);
