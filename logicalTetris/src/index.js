@@ -65,7 +65,7 @@ var Tetris = /** @class */ (function () {
     };
     Tetris.prototype.show = function () {
         var out = "";
-        for (var i = this.mapY + this.mapY_pad - 1; i >= 0; i--) {
+        for (var i = this.mapY - 1; i >= 0; i--) {
             for (var j = 0; j < this.mapX; j++) {
                 out += (this.map[i][j].r + this.map[i][j].g + this.map[i][j].b > 0) ? "1" : "0";
             }
@@ -73,7 +73,7 @@ var Tetris = /** @class */ (function () {
         }
         this.display.innerHTML = out;
     };
-    Tetris.prototype.update = function () {
+    Tetris.prototype.updateGravity = function () {
         var _this = this;
         var move = true;
         this.currentPiece.shape.forEach(function (cube) {
@@ -96,19 +96,16 @@ var Tetris = /** @class */ (function () {
             this.addPiece();
         }
     };
+    Tetris.prototype.checkGame = function () {
+    };
     Tetris.prototype.start = function () {
         var _this = this;
         this.addPiece();
         this.show();
         setInterval(function () {
-            try {
-                _this.update();
-                _this.show();
-            }
-            catch (e) {
-                console.log(e);
-                stop();
-            }
+            _this.updateGravity();
+            _this.checkGame();
+            _this.show();
         }, 500);
     };
     return Tetris;

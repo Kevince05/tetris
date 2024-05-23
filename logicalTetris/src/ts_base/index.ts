@@ -31,7 +31,9 @@ class Tetris {
         }
     }
 
-    private readonly display: HTMLParagraphElement;//debug display
+    private readonly mapDisplay: HTMLParagraphElement;//debug displa
+    private readonly pointsDisplay: HTMLParagraphElement;//points display
+    private poitns: number = 0;//points
     private map: [[{ r: number, g: number, b: number }]];//2D array of colors ranging from 0.0-1.0
     private readonly mapX: number = 10;
     private readonly mapY: number = 20;
@@ -40,8 +42,9 @@ class Tetris {
     private nextPiece: { shape: [{ x: number, y: number }, { x: number, y: number }, { x: number, y: number }, { x: number, y: number }], color: { r: number, g: number, b: number } }; //relative coordinates of the next piece 
     private rnd_key: string = "";
 
-    constructor(display: HTMLParagraphElement) {
-        this.display = display;
+    constructor(mapDisplay: HTMLParagraphElement, pointsDisplay: HTMLParagraphElement) {
+        this.mapDisplay = mapDisplay;
+        this.pointsDisplay = pointsDisplay;
         //init currentPiece and generate nextPiece
         this.currentPiece = { shape: [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }], color: { r: 0, g: 0, b: 0 } };
         this.nextPiece = this.pieces[Object.keys(this.pieces)[Math.floor(Math.random() * Object.keys(this.pieces).length)]];
@@ -60,10 +63,10 @@ class Tetris {
     private addPiece(): void {
         this.currentPiece = JSON.parse(JSON.stringify(this.nextPiece));//deep clone nextPiece to currentPiece
         this.rnd_key = Object.keys(this.pieces)[Math.floor(Math.random() * Object.keys(this.pieces).length)];
-        console.log("pieces",this.pieces);        
-        console.log("currentPiece",this.currentPiece);
+        console.log("pieces", this.pieces);
+        console.log("currentPiece", this.currentPiece);
         this.nextPiece = JSON.parse(JSON.stringify(this.pieces[this.rnd_key]));
-        console.log("nextPiece",this.rnd_key);
+        console.log("nextPiece", this.rnd_key);
         this.currentPiece.shape.forEach((cube) => {
             cube.x = cube.x + this.mapX / 2 - 1;
             cube.y = cube.y + this.mapY
@@ -74,16 +77,16 @@ class Tetris {
 
     private show(): void {
         var out = "";
-        for (let i = this.mapY + this.mapY_pad - 1; i >= 0; i--) {
+        for (let i = this.mapY - 1; i >= 0; i--) {
             for (let j = 0; j < this.mapX; j++) {
                 out += (this.map[i][j].r + this.map[i][j].g + this.map[i][j].b > 0) ? "1" : "0";
             }
             out += "<br>";
         }
-        this.display.innerHTML = out;
+        this.mapDisplay.innerHTML = out;
     }
 
-    private update(): void {
+    private updateGravity(): void {
         var move = true;
         this.currentPiece.shape.forEach(cube => {
             if (cube.y - 1 < 0) {
@@ -105,18 +108,20 @@ class Tetris {
         }
     }
 
+    private checkGame(): void { 
+        this.map.forEach((row, i) => {
+            
+        });
+    }
+
     public start(): void {
+        this.poitns = 0;
         this.addPiece();
         this.show();
         setInterval(() => {
-            try {
-                this.update();
-                this.show();
-            }
-            catch (e) {
-                console.log(e);
-                stop();
-            }
+            this.updateGravity();
+            this.checkGame();
+            this.show();
         }, 500);
     }
 }
