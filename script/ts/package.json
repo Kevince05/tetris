@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "babylonjs": "^7.8.0",
-    "browserify": "^17.0.0",
     "html-webpack-plugin": "^5.6.0",
     "webpack-dev-server": "^5.0.4"
   }
