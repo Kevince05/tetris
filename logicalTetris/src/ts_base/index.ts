@@ -14,7 +14,7 @@ class Tetris {
             color: { r: 0, g: 1, b: 0 },//rgba(233,61,30,255)
         },
         'z': {
-            shape: [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 0 }, { x: 2, y: 0 }],
+            shape: [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 0 }],
             color: { r: 1, g: 0, b: 0 },//rgba(121,174,61,255)
         },
         'l': {
@@ -35,9 +35,10 @@ class Tetris {
     private map: [[{ r: number, g: number, b: number }]];//2D array of colors ranging from 0.0-1.0
     private readonly mapX: number = 10;
     private readonly mapY: number = 20;
-    private readonly mapY_pad: number = 4;
+    private readonly mapY_pad: number = 5;
     private currentPiece: { shape: [{ x: number, y: number }, { x: number, y: number }, { x: number, y: number }, { x: number, y: number }], color: { r: number, g: number, b: number } }; //map coordinates of the active piece
     private nextPiece: { shape: [{ x: number, y: number }, { x: number, y: number }, { x: number, y: number }, { x: number, y: number }], color: { r: number, g: number, b: number } }; //relative coordinates of the next piece 
+    private rnd_key: string = "";
 
     constructor(display: HTMLParagraphElement) {
         this.display = display;
@@ -57,11 +58,16 @@ class Tetris {
 
     //add piece to map in the padding zone
     private addPiece(): void {
-        this.currentPiece = this.nextPiece;
-        this.nextPiece = this.pieces[Object.keys(this.pieces)[Math.floor(Math.random() * Object.keys(this.pieces).length)]];
+        this.currentPiece = JSON.parse(JSON.stringify(this.nextPiece));//deep clone nextPiece to currentPiece
+        this.rnd_key = Object.keys(this.pieces)[Math.floor(Math.random() * Object.keys(this.pieces).length)];
+        console.log("pieces",this.pieces);        
+        console.log("currentPiece",this.currentPiece);
+        this.nextPiece = JSON.parse(JSON.stringify(this.pieces[this.rnd_key]));
+        console.log("nextPiece",this.rnd_key);
         this.currentPiece.shape.forEach((cube) => {
             cube.x = cube.x + this.mapX / 2 - 1;
             cube.y = cube.y + this.mapY
+            console.log(this.currentPiece, cube);
             this.map[cube.y][cube.x] = this.currentPiece.color;
         });
     }
@@ -78,31 +84,39 @@ class Tetris {
     }
 
     private update(): void {
-
         var move = true;
         this.currentPiece.shape.forEach(cube => {
-            //check if there is something below
-            //check if this something is the currentPiece himself
-            move = (this.map[cube.y - 1][cube.x].r !== 0 ||
-                this.map[cube.y - 1][cube.x].g !== 0 ||
-                this.map[cube.y - 1][cube.x].b !== 0);
-            console.log(move);
-            if (move) {
-                this.currentPiece.shape.forEach(cube => {
-                    this.map[cube.y][cube.x] = { r: 0, g: 0, b: 0 };
-                    cube.y--;
-                    this.map[cube.y][cube.x] = this.currentPiece.color;
-                });
+            if (cube.y - 1 < 0) {
+                move = false;
+            } else if (this.map[cube.y - 1][cube.x].r + this.map[cube.y - 1][cube.x].g + this.map[cube.y - 1][cube.x].b !== 0 &&
+                this.currentPiece.shape.filter(c => c.x === cube.x && c.y === cube.y - 1).length === 0
+            ) {
+                move = false;
             }
         });
+
+        if (move) {
+            this.currentPiece.shape.forEach(cube => {
+                [this.map[cube.y][cube.x], this.map[cube.y - 1][cube.x]] = [this.map[cube.y - 1][cube.x], this.map[cube.y][cube.x]]
+                cube.y--;
+            });
+        } else {
+            this.addPiece();
+        }
     }
 
     public start(): void {
         this.addPiece();
         this.show();
         setInterval(() => {
-            this.update();
-            this.show();
+            try {
+                this.update();
+                this.show();
+            }
+            catch (e) {
+                console.log(e);
+                stop();
+            }
         }, 500);
     }
 }

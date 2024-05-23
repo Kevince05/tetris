@@ -1,7 +1,7 @@
 <?php
 session_start();
 $error = null;
-$db = new mysqli("localhost", "root", "", "3d_sim");
+$db = new mysqli("localhost", "root", "", "tetris");
 
 if ($db->connect_error) {
     die("Connection failed: " . $conn->connect_error);
