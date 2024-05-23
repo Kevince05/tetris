@@ -1,38 +1,67 @@
+import { Size } from "@babylonjs/core";
 import { EventEmitter } from "events";
 export class Tetris {
 
     private readonly pieces: { [key: string]: { shape: [{ x: number, y: number }, { x: number, y: number }, { x: number, y: number }, { x: number, y: number }], color: { r: number, g: number, b: number } } } = {
         'o': {
             shape: [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }],
-            color: { r: 1, g: 1, b: 0 },//rgba(254,248,76,255)
+            color: {
+                r: 0.996078431372549,
+                g: 0.9725490196078431,
+                b: 0.2980392156862745
+            },//rgba(254,248,76,255)
         },
         'i': {
             shape: [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }],
-            color: { r: 0, g: 1, b: 1 },//rgba(81,225,252,255)
+            color: { 
+                r: 0.3176470588235294, 
+                g: 0.8823529411764706, 
+                b: 0.9882352941176471 
+            },//rgba(81,225,252,255)
         },
         's': {
             shape: [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
-            color: { r: 0, g: 1, b: 0 },//rgba(233,61,30,255)
+            color: { 
+                r: 0.9137254901960784,
+                g: 0.23921568627450981,
+                b: 0.11764705882352941 
+            },//rgba(233,61,30,255)
         },
         'z': {
             shape: [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 0 }],
-            color: { r: 1, g: 0, b: 0 },//rgba(121,174,61,255)
+            color: { 
+                r: 0.4745098039215686, 
+                g: 0.6823529411764706, 
+                b: 0.23921568627450981 
+            },//rgba(121,174,61,255)
         },
         'l': {
             shape: [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }],
-            color: { r: 1, g: 0.5, b: 0 },//rgba(246,146,48,255)
+            color: { 
+                r: 0.9647058823529412, 
+                g: 0.5725490196078431, 
+                b: 0.18823529411764706 
+            },//rgba(246,146,48,255)
         },
         'j': {
             shape: [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }],
-            color: { r: 0, g: 0, b: 1 },//rgba(241,110,185,255)
+            color: { 
+                r: 0.9450980392156862, 
+                g: 0.43137254901960786, 
+                b: 0.7254901960784313 
+            },//rgba(241,110,185,255)
         },
         't': {
             shape: [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
-            color: { r: 1, g: 0, b: 1 },//rgba(148,54,146,255)
+            color: { 
+                r: 0.5803921568627451, 
+                g: 0.21176470588235294, 
+                b: 0.5725490196078431 
+            },//rgba(148,54,146,255)
         }
     }
 
-    private poitns: number = 0;//points
+    private points: number = 0;//points
     private map: [[{ r: number, g: number, b: number }]];//2D array of colors ranging from 0.0-1.0
     private readonly mapX: number = 10;
     private readonly mapY: number = 20;
@@ -101,7 +130,7 @@ export class Tetris {
         this.map.forEach((row, i) => {
             if (i === this.mapY) {//doable bc of padding space over the map
                 row.forEach((cube, j) => {
-                    if (cube.r + cube.g + cube.b !== 0 && this.currentPiece.shape.filter(c => c.x === j&& c.y === i).length === 0){
+                    if (cube.r + cube.g + cube.b !== 0 && this.currentPiece.shape.filter(c => c.x === j && c.y === i).length === 0) {
                         this.stop();
                     }
                 });
@@ -126,8 +155,24 @@ export class Tetris {
         }
     }
 
-    public getMap(): [[{ r: number, g: number, b: number }]] {
-        return this.map;
+    public getGameData(): { map: { data: [[{ r: number, g: number, b: number }]], sizeX: number, sizeZ: number }, points: number } {
+        return { map: { data: this.map, sizeX: this.mapX, sizeZ: this.mapY }, points: this.points };
+    }
+    
+    public attachInput(): void {
+        window.onkeydown = (e) => {
+            switch (e.key) {
+                case "ArrowRight":
+                    this.move(true);
+                    break;
+                case "ArrowLeft":
+                    this.move(false);
+                    break;
+                case "ArrowDown":
+                    this.updateGravity();
+                    break;
+            }
+        }
     }
 
     public stop(): void {
@@ -136,25 +181,11 @@ export class Tetris {
     }
 
     public start(): void {
-        this.poitns = 0;
+        this.points = 0;
         this.addPiece();
-        //document.onkeydown = (e) => {
-        //    switch (e.key) {
-        //        case "ArrowRight":
-        //            this.move(true);
-        //            break;
-        //        case "ArrowLeft":
-        //            this.move(false);
-        //            break;
-        //        case "ArrowDown":
-        //            this.updateGravity();
-        //            break;
-        //    }
-        //
-        //}
         this.updateIntervalID = setInterval(() => {
-            this.updateGravity();
+            //this.updateGravity();
             this.checkGame();
-        }, 50);
+        }, 1000);
     }
 }

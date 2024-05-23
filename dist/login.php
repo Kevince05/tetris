@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <title>Login</title>
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
 </head>
 
 <body data-bs-theme="dark" style="overflow: hidden;">
@@ -113,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 <div class="col-sm-9 px-0">
-                    <canvas id="demo" touch-action="none" style="touch-action: none; outline: none; -webkit-tap-highlight-color: transparent; height: 100vh; width: 100%;"></canvas>
+                    <canvas id="renderCanvas" touch-action="none" style="touch-action: none; outline: none; -webkit-tap-highlight-color: transparent; height: 100vh; width: 100%;"></canvas>
                     <script src="js/bundle.js"></script>
                 </div>
             </div>
