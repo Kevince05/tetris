@@ -184,7 +184,7 @@ export class Tetris {
         this.points = 0;
         this.addPiece();
         this.updateIntervalID = setInterval(() => {
-            //this.updateGravity();
+            this.updateGravity();
             this.checkGame();
         }, 1000);
     }
