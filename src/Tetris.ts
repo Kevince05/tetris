@@ -71,21 +71,9 @@ class Tetris {
     private rnd_key: string = "";
     private updateIntervalID: NodeJS.Timeout;
     private scene: BABYLON.Scene;
+    public running: boolean = false;
 
     constructor(engine: BABYLON.Engine) {
-
-        //init currentPiece and generate nextPiece
-        this.currentPiece = { shape: [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }], color: { r: 0, g: 0, b: 0 } };
-        this.nextPiece = this.pieces[Object.keys(this.pieces)[Math.floor(Math.random() * Object.keys(this.pieces).length)]];
-        //init map --> fills with (0,0,0)
-        this.map = [{}] as [[{ r: number, g: number, b: number }]];
-        for (let i = 0; i < this.mapY + this.mapY_pad; i++) {
-            this.map[i] = [{}] as [{ r: number, g: number, b: number }];
-            for (let j = 0; j < this.mapX; j++) {
-                this.map[i][j] = { r: 0, g: 0, b: 0 };
-            }
-        }
-
         this.scene = new BABYLON.Scene(engine);
 
         const light = new BABYLON.SpotLight("light", new BABYLON.Vector3(50, 300, 200), new BABYLON.Vector3(0, -1, -1), Math.PI / 2, 0.1, this.scene);
@@ -107,6 +95,24 @@ class Tetris {
             this.scene.clearColor = new BABYLON.Color4(r / 255, g / 255, b / 255, 0.5);
         }
 
+        engine.runRenderLoop(() => {
+            this.scene.render();
+        });
+    }
+
+    private init(): void {
+        //init currentPiece and generate nextPiece
+        this.currentPiece = { shape: [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }], color: { r: 0, g: 0, b: 0 } };
+        this.nextPiece = this.pieces[Object.keys(this.pieces)[Math.floor(Math.random() * Object.keys(this.pieces).length)]];
+        //init map --> fills with (0,0,0)
+        this.map = [{}] as [[{ r: number, g: number, b: number }]];
+        for (let i = 0; i < this.mapY + this.mapY_pad; i++) {
+            this.map[i] = [{}] as [{ r: number, g: number, b: number }];
+            for (let j = 0; j < this.mapX; j++) {
+                this.map[i][j] = { r: 0, g: 0, b: 0 };
+            }
+        }
+
         //int 3d this.scene
         for (let i = 0; i < this.mapY; i++) {
             for (let j = 0; j < this.mapX; j++) {
@@ -117,11 +123,7 @@ class Tetris {
                 block.material = mat;
             }
         }
-
-
-        engine.runRenderLoop(() => {
-            this.scene.render();
-        });
+        this.points = 0;
     }
     //add piece to map in the padding zone
     private addPiece(): void {
@@ -218,16 +220,19 @@ class Tetris {
 
     public stop(): void {
         clearInterval(this.updateIntervalID);
+        this.init();
+        this.running = false;
         //document.onkeydown = null;
     }
 
     public start(): void {
-        this.points = 0;
+        this.stop();// in case of restart
         this.addPiece();
         this.updateIntervalID = setInterval(() => {
             this.updateGravity();
             this.checkGame();
         }, 1000);
+        this.running = true;
     }
 }
 
