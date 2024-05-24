@@ -3,7 +3,6 @@ const fs = require("fs");
 const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
-    entry: path.resolve(appDirectory, "src/demo.ts"), //path to the main .ts file
     output: {
         filename: "js/bundle.js", //name for the javascript file that is created/compiled in memory
     },

@@ -42,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-
 <head>
     <title>Login</title>
 </head>
@@ -105,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <?php
                             if (isset($error)) {
-                                echo '<div id="error-wrapper" class="container"><p>' . $error . '</p></div>';
+                                echo '<div id="error-wrapper" class="container bg-danger rounded mt-2"><p>' . $error . '</p></div>';
                             }
                             ?>
                         </form>
@@ -113,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="col-sm-9 px-0">
                     <canvas id="renderCanvas" touch-action="none" style="touch-action: none; outline: none; -webkit-tap-highlight-color: transparent; height: 100vh; width: 100%;"></canvas>
-                    <script src="js/bundle.js"></script>
+                    <script src="./demo/js/bundle.js"></script>
                 </div>
             </div>
         </div>
