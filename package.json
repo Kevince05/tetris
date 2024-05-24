@@ -4,7 +4,9 @@
   "description": "\u0000",
   "main": "index.js",
   "scripts": {
-    "build": "webpack"
+    "buildGame": "webpack --entry ./src/game.ts --output-path ./dist/game",
+    "buildDemo": "webpack --entry ./src/demo.ts --output-path ./dist/demo",
+    "help": "webpack --help"
   },
   "author": "",
   "license": "ISC",
